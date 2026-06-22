@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -NoProfile -Command \"Get-Command node,npm -ErrorAction SilentlyContinue | Format-Table Name,Source; Get-Command cscript -ErrorAction SilentlyContinue | Format-Table Name,Source\")",
+      "Bash(cscript //NoLogo //E:JScript \"script.js\")",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(ls \"C:\\\\Users\\\\halan\\\\.claude\\\\projects\\\\c--Ben-Catch-the-Coffee\\\\memory\\\\\" 2>/dev/null; echo \"---\"; ls \"C:\\\\Users\\\\halan\\\\.claude\\\\skills\\\\\" 2>/dev/null; echo \"---\"; ls \"C:\\\\Users\\\\halan\\\\.claude\\\\plugins\\\\\" 2>/dev/null)",
+      "Read(//c/Users/halan/.claude/plugins\" 2>/dev/**)",
+      "Read(//c/Users/halan/.claude/**)",
+      "Read(//c/Users/halan/.claude/plugins/**)"
+    ]
+  }
+}
