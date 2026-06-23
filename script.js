@@ -22,10 +22,21 @@
 
   // Rank tiers (score -> { name, emoji })
   const RANKS = [
-    { min:  0, max: 20,  name: "Beginner Sipper", emoji: "🥛" },
-    { min: 21, max: 50,  name: "Coffee Catcher",  emoji: "☕" },
-    { min: 51, max: 80,  name: "Caffeine Pro",    emoji: "⚡" },
-    { min: 81, max: Infinity, name: "Coffee Master", emoji: "👑" },
+    { min:    0, max:  499,        name: "Beginner Sipper", emoji: "🥛" },
+    { min:  500, max: 1499,        name: "Coffee Catcher",  emoji: "☕" },
+    { min: 1500, max: 2999,        name: "Caffeine Pro",    emoji: "⚡" },
+    { min: 3000, max: 4999,        name: "Coffee Master",   emoji: "👑" },
+    { min: 5000, max: Infinity,    name: "Coffee Legend",   emoji: "🌟" },
+  ];
+
+  // Achievements — unlocked when the final score reaches `min` or higher.
+  // Listed in ascending order so the rendered chips read from easiest to hardest.
+  const ACHIEVEMENTS = [
+    { min:  100, name: "First Sip",      emoji: "☕" },
+    { min:  500, name: "Coffee Catcher", emoji: "🥤" },
+    { min: 1500, name: "Caffeine Pro",   emoji: "⚡" },
+    { min: 3000, name: "Coffee Master",  emoji: "👑" },
+    { min: 5000, name: "Coffee Legend",  emoji: "🌟" },
   ];
 
   // --- Elements ---
@@ -55,6 +66,7 @@
   const finalBestEl     = document.getElementById("finalBest");
   const rankEmojiEl     = document.getElementById("rankEmoji");
   const rankNameEl      = document.getElementById("rankName");
+  const achievementListEl = document.getElementById("achievementList");
 
   const copiedToast     = document.getElementById("copiedToast");
   const soundToggle     = document.getElementById("soundToggle");
@@ -252,6 +264,37 @@
     }
     return RANKS[0];
   }
+  function unlockedAchievements(s) {
+    return ACHIEVEMENTS.filter(function (a) { return s >= a.min; });
+  }
+  function renderAchievements(s) {
+    // Rebuild the list on every game-over so it always reflects the current run.
+    while (achievementListEl.firstChild) {
+      achievementListEl.removeChild(achievementListEl.firstChild);
+    }
+    const unlocked = unlockedAchievements(s);
+    if (unlocked.length === 0) {
+      const li = document.createElement("li");
+      li.className = "achievement-empty";
+      li.textContent = "No achievements unlocked this round. Keep trying!";
+      achievementListEl.appendChild(li);
+      return;
+    }
+    for (let i = 0; i < unlocked.length; i++) {
+      const a = unlocked[i];
+      const li = document.createElement("li");
+      li.className = "achievement-item";
+      const emoji = document.createElement("span");
+      emoji.className = "achievement-emoji";
+      emoji.textContent = a.emoji;
+      const name = document.createElement("span");
+      name.className = "achievement-name";
+      name.textContent = a.name;
+      li.appendChild(emoji);
+      li.appendChild(name);
+      achievementListEl.appendChild(li);
+    }
+  }
 
   // --- Screens ---
   function showWelcome() {
@@ -282,6 +325,7 @@
     const rank = rankFor(score);
     rankEmojiEl.textContent = rank.emoji;
     rankNameEl.textContent  = rank.name;
+    renderAchievements(score);
 
     gameUI.hidden = true;
     welcomeScreen.hidden = true;
